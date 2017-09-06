@@ -1,68 +1,60 @@
-// Dummy router implementation in javascript
-// Author: Norris Oduro Tei
-// Email: norrisjibril@gmail.com
+/*---------------------------------------------*\
+  -DUMMY ROUTER PACKAGE.
+  PROJECT NAME: VOLTJS
+  AUTHOR: NORRIS ODURO
+  FORKED: JAB CLARI
+\*---------------------------------------------*/
+const $print = console.log.bind(console);
 
-'use strict';
-
-var HomeController = {
-  users:function(name,name1){
-    console.log(name,name1);
+const HomeController = {
+  users(name, name1) {
+    $print(name,name1);
   },
-  sendMailToAdmin:function(email){
-        console.log("Sending email to "+email);
+  sendMailToAdmin(email) {
+        $print(`Sending email to ${email}`);
     }
 };
 
 
 //router object
-var router = {
+const router = {
   routes: [],
   currentUrl: {},
-  gets: function(url,action,parameters=[])
-  {
-    this.routes.push({url:this.parseUrl(url),action:action,parameters:parameters});
+  gets(url, action, parameters=[]) {
+    this.routes.push({url:this.parseUrl(url),action,parameters});
   },
-  parseUrl:function(url)
-  {
-    if(url[0]=='/')
-      {
+  parseUrl(url) {
+    if(url[0]=='/'){
         url =url.slice(1,url.length);
       }
-    if(url[url.length-1] == '/')
-      {
+    if(url[url.length-1] == '/'){
         url =url.slice(0,url.length-1);
       }
     return url;
   },
-  dispatch:function(url)
-  { 
+  dispatch(url) { 
     let uri = new URL(url);
-    if(this.mapUrl(this.parseUrl(uri.pathname)))
-      {
+    if(this.mapUrl(this.parseUrl(uri.pathname))){
        let userFunc = this.parseUserFunc(this.currentUrl.action);
         return window[userFunc[0]][userFunc[1]](...this.currentUrl.parameters);
       }else{
         //throw "Sorry Route Not Defined";
-        console.log("Sorry route "+uri.pathname+" not defined")
+        $print(`Sorry route ${uri.pathname} not defined`)
       }
   },
-  mapUrl:function(url)
-  {
-    for(let i =0; i<this.routes.length;i++)
-      {
-        if(this.routes[i].url == url)
-          {
+  mapUrl(url) {
+    for(let i =0; i<this.routes.length;i++){
+        if(this.routes[i].url == url){
             this.currentUrl = this.routes[i];
             return true;
           }
       }
     return false;
   },
-  parseUserFunc:function(action)
-  {
+  parseUserFunc(action) {
      return action.split("@"); 
   }
-}
+};
 
 //declare your routes
 router.gets("/users/","HomeController@users",["Norris Oduro","Joshua Baah"]);
